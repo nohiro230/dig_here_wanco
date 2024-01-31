@@ -1,18 +1,15 @@
-import { useState } from 'react';
-
 import { generateGrid, openCell, toggleFlag } from '@/utils/logic';
 import { GameState } from '@/types/GameState';
 import { GameStatus } from '@/types/GameStatus';
 
 const LONG_PRESS_DURATION = 500; // 長押しとみなす時間（ミリ秒）
 
-export const initializeGame = (size: number, mineCount: number) => {
-  const newGrid = generateGrid(size, mineCount);
+export const initializeGame = (state: GameState) => {
+  const newGrid = generateGrid(state.gridSize, state.minesCount);
   return {
+    gameStatus: GameStatus.Waiting,
     grid: newGrid,
-    minesCount: mineCount,
     flagsCount: 0,
-    gameStatus: GameStatus.Waiting
   };
 };
 

@@ -1,6 +1,5 @@
 import { useGameStore } from '@/store/gameStore';
 import { GameStatus } from '@/types/GameStatus';
-import React from 'react';
 
 type Props = {
   status: GameStatus;

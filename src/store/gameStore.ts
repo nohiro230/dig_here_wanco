@@ -6,10 +6,12 @@ import { initializeGame, openCellAction, toggleFlagAction } from '@/actions/game
 export const useGameStore = create<GameState>((set) => ({
   gameStatus: GameStatus.Waiting,
   grid: [],
-  minesCount: 0,
+  minesCount: 10,
   flagsCount: 0,
+  gridSize: 8,
   setGrid: (newGrid) => set({ grid: newGrid }),
+  setDifficulty: (gridSize: number, mineCount: number) => set({ gridSize, minesCount: mineCount }),
   openCell: (row: number, col: number) => set((state) => openCellAction(state, row, col)),
   toggleFlag: (row: number, col: number) => set((state) => toggleFlagAction(state, row, col)),
-  initializeGame: (size: number, mineCount: number) => set(() => initializeGame(size, mineCount)),
+  initializeGame: () => set((state) => initializeGame(state)),
 }));

@@ -7,18 +7,24 @@ import { useGameStore } from '@/store/gameStore';
 import Board from "@/components/Board";
 import StatusBar from '@/components/StatusBar';
 import RestartButton from '@/components/RestartButton';
+import DifficultySelector from '@/components/DifficultySelector';
 
 export default function Home() {
-  const gameStatus = useGameStore((state) => state.gameStatus);
 
-  const gridSize = 10; // グリッドのサイズ
-  const mineCount = 10; // マインの数
-
-  const initializeGame = useGameStore((state) => state.initializeGame);
+  const { gameStatus, initializeGame, setDifficulty } = useGameStore((state) => ({
+    gameStatus: state.gameStatus,
+    initializeGame: state.initializeGame,
+    setDifficulty: state.setDifficulty
+  }));
 
   useEffect(() => {
-    initializeGame(gridSize, mineCount);
-  }, [initializeGame, gridSize, mineCount]);
+    initializeGame();
+  }, [initializeGame]);
+
+  const handleSelectDifficulty = (gridSize: number, mineCount: number) => {
+    setDifficulty(gridSize, mineCount);
+    initializeGame();
+  };
 
   return (
     <main className="grid gap-4">
@@ -28,8 +34,10 @@ export default function Home() {
         {gameStatus === GameStatus.Lost && (
           <div>
             <p>Game Over!</p>
-            <RestartButton />
           </div>
+        )}
+        {gameStatus !== GameStatus.Playing && (
+          <DifficultySelector onSelectDifficulty={handleSelectDifficulty} />
         )}
     </main>
   );
