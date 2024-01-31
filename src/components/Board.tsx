@@ -3,7 +3,7 @@ import Cell from '@/components/Cell';
 import { useGameStore } from '@/store/gameStore';
 
 
-const Board: React.FC = () => {
+export default function Board() {
   const grid = useGameStore((state) => state.grid);
   const openCell = useGameStore((state) => state.openCell);
   const gridCols = grid[0]?.length || 0;
@@ -36,5 +36,3 @@ const Board: React.FC = () => {
     </>
   );
 };
-
-export default Board;

@@ -1,31 +1,36 @@
 "use client"
 import React, { useEffect } from 'react';
 
-import { generateGrid } from '@/utils/logic';
+import { GameStatus } from '@/types/GameStatus';
 import { useGameStore } from '@/store/gameStore';
 
 import Board from "@/components/Board";
 import StatusBar from '@/components/StatusBar';
+import RestartButton from '@/components/RestartButton';
 
 export default function Home() {
+  const gameStatus = useGameStore((state) => state.gameStatus);
+
   const gridSize = 10; // グリッドのサイズ
   const mineCount = 10; // マインの数
 
-  const setGrid = useGameStore((state) => state.setGrid);
   const initializeGame = useGameStore((state) => state.initializeGame);
-  const minesCount = useGameStore((state) => state.minesCount);
-  const flagsCount = useGameStore((state) => state.flagsCount);
 
   useEffect(() => {
     initializeGame(gridSize, mineCount);
   }, [initializeGame, gridSize, mineCount]);
 
-  const minesLeft = minesCount - flagsCount;
-
   return (
     <main className="grid gap-4">
-        <StatusBar minesLeft={minesLeft} />
+        <StatusBar status={gameStatus} />
         <Board />
+        <RestartButton />
+        {gameStatus === GameStatus.Lost && (
+          <div>
+            <p>Game Over!</p>
+            <RestartButton />
+          </div>
+        )}
     </main>
   );
 }

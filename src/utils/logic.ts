@@ -55,12 +55,13 @@ const openAdjacentCells = (grid: CellType[][], row: number, col: number, rows: n
   // 新しいグリッドのインスタンスを作成
   let newGrid = grid.map(row => row.map(cell => ({ ...cell })));
 
-  if (row < 0 || row >= rows || col < 0 || col >= cols || newGrid[row][col].isOpen) {
+  if (row < 0 || row >= rows || col < 0 || col >= cols || newGrid[row][col].isOpen || newGrid[row][col].isFlagged) {
     return newGrid;
   }
 
   newGrid[row][col].isOpen = true;
 
+  // 隣接するマインがない場合、隣接するセルも開く
   if (newGrid[row][col].adjacentMines === 0) {
     for (let i = -1; i <= 1; i++) {
       for (let j = -1; j <= 1; j++) {
