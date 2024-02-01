@@ -3,4 +3,5 @@ export type CellType = {
   isMine: boolean;
   isOpen: boolean;
   isFlagged: boolean;
+  isSpecial: boolean;
 };

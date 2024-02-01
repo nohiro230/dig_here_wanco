@@ -1,5 +1,6 @@
 import { useGameStore } from '@/store/gameStore';
 import { GameStatus } from '@/types/GameStatus';
+import Flag from './icons/Flag';
 
 type Props = {
   status: GameStatus;
@@ -19,7 +20,7 @@ export default function StatusBar({ status }: Props) {
           {status}
         </div>
         <div className="flex justify-between w-10 text-right">
-          <span>🚩</span>{minesLeft}
+          <span><Flag /></span>{minesLeft}
         </div>
       </div>
     </div>

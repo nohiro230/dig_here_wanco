@@ -8,6 +8,7 @@ export const generateGrid = (size: number, mineCount: number): CellType[][] => {
       adjacentMines: 0,
       isOpen: false,
       isFlagged: false,
+      isSpecial: false,
     }))
   );
 
@@ -31,6 +32,19 @@ export const generateGrid = (size: number, mineCount: number): CellType[][] => {
       }
     }
   }
+
+  // ランダムな空白セルに特別なクラスを付与
+  let specialCellPlaced = false;
+  while (!specialCellPlaced) {
+    const row = Math.floor(Math.random() * size);
+    const col = Math.floor(Math.random() * size);
+
+    if (!grid[row][col].isMine && grid[row][col].adjacentMines === 0) {
+      grid[row][col].isSpecial = true;
+      specialCellPlaced = true;
+    }
+  }
+
 
   return grid;
 };

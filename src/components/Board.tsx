@@ -4,9 +4,7 @@ import { useGameStore } from '@/store/gameStore';
 
 export default function Board() {
   const grid = useGameStore((state) => state.grid);
-  const openCell = useGameStore((state) => state.openCell);
   const gridCols = grid[0]?.length || 0;
-  const toggleFlag = useGameStore((state) => state.toggleFlag);
 
   return (
     <>
@@ -19,14 +17,15 @@ export default function Board() {
               isMine={cell.isMine}
               isOpen={cell.isOpen}
               isFlagged={cell.isFlagged}
-              onClick={() => openCell(rowIndex, cellIndex)}
-              onLongPress={() => toggleFlag(rowIndex, cellIndex)}
+              isSpecial={cell.isSpecial}
+              rowIndex={rowIndex}
+              colIndex={cellIndex}
             />
           ))
         )}
       </div>
 
-      {/* 動的にtailwindcssを生成したかったができなかった */}
+      {/* 動的にtailwind cssを生成したかったができなかった */}
       <style jsx>{`
         .boardGrid {
           grid-template-columns: repeat(${gridCols}, minmax(0, 1fr));

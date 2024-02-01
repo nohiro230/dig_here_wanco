@@ -1,15 +1,16 @@
 import { generateGrid, openCell, toggleFlag } from '@/utils/logic';
 import { GameState } from '@/types/GameState';
 import { GameStatus } from '@/types/GameStatus';
-
-const LONG_PRESS_DURATION = 500; // 長押しとみなす時間（ミリ秒）
+import { CellType } from '@/types/CellType';
 
 export const initializeGame = (state: GameState) => {
   const newGrid = generateGrid(state.gridSize, state.minesCount);
+
   return {
     gameStatus: GameStatus.Waiting,
     grid: newGrid,
     flagsCount: 0,
+    activeCell: { row: null, col: null },
   };
 };
 
@@ -26,7 +27,8 @@ export const openCellAction = (state: GameState, row: number, col: number) => {
 
   // 爆弾を開いたときの処理
   if (cell.isMine) {
-    return { ...state, grid: newGrid, gameStatus: GameStatus.Lost };
+    const revealedGrid = revealAllMines(newGrid);
+    return { ...state, grid: revealedGrid, gameStatus: GameStatus.Lost };
   }
 
   // 開かれていないセルの数を計算
@@ -46,49 +48,24 @@ export const toggleFlagAction = (state: GameState, row: number, col: number) => 
   return { grid: newGrid, flagsCount: newFlagsCount };
 };
 
-// セルのタッチ動作
-export const handleCellTouchStart = (
-  isOpen: boolean,
-  setLongPressTriggered: (value: boolean) => void,
-  setPressTimer: (timer: NodeJS.Timeout | null) => void,
-  onLongPress: () => void
-) => {
-
-  if (isOpen) {
-    return;
-  }
-
-  setLongPressTriggered(false);
-  setPressTimer(setTimeout(() => {
-    onLongPress();
-    setLongPressTriggered(true);
-  }, LONG_PRESS_DURATION));
-};
-
-export const handleCellTouchEnd = (
-  e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
-  longPressTriggered: boolean,
-  pressTimer: NodeJS.Timeout | null,
-  setPressTimer: (timer: NodeJS.Timeout | null) => void
-) => {
-  if (pressTimer) {
-    clearTimeout(pressTimer);
-    setPressTimer(null);
-  }
-  if (longPressTriggered) {
-    e.preventDefault(); // 長押しの場合はクリックイベントをキャンセル
-  }
+const revealAllMines = (grid: CellType[][]): CellType[][] => {
+  return grid.map(row => row.map(cell => {
+    if (cell.isMine) {
+      return { ...cell, isOpen: true };
+    }
+    return cell;
+  }));
 };
 
 export const handleCellClick = (
-  e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
-  isFlagged: boolean,
-  longPressTriggered: boolean,
-  onClick: () => void,
+  state: GameState,
+  row: number,
+  col: number,
+  action: 'open' | 'flag'
 ) => {
-  if (isFlagged || longPressTriggered) {
-    e.preventDefault();
-    return;
+  if (action === 'flag') {
+    return toggleFlagAction(state, row, col);
+  } else {
+    return openCellAction(state, row, col);
   }
-  onClick();
 };
