@@ -29,7 +29,7 @@ export default function Cell({ value, isMine, isOpen, isFlagged, isSpecial, rowI
   const isActive = activeCell.row === rowIndex && activeCell.col === colIndex;
 
   const handleClick = () => {
-    if (gameStatus === GameStatus.Won || gameStatus === GameStatus.Lost) {
+    if (isOpen || gameStatus === GameStatus.Won || gameStatus === GameStatus.Lost) {
       return;
     }
     if (isActive) {
@@ -45,7 +45,6 @@ export default function Cell({ value, isMine, isOpen, isFlagged, isSpecial, rowI
 
   const handleOpen = () => {
     if (isFlagged) {
-
       return;
     }
     openCell(rowIndex, colIndex);

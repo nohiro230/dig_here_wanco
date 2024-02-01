@@ -19,10 +19,10 @@ export default function ActionSelector({ onOpen, onFlag }: Props) {
 
   return (
     <div className="w-8 h-8 absolute z-50">
-      <button onClick={handleOpenClick} className="absolute inset-0 -mt-16">
+      <button onClick={handleOpenClick} className="absolute inset-0 -mt-8 w-8 h-8 bg-white border border-gray-300 bg-opacity-90 rounded-full shadow">
         <Dig />
       </button>
-      <button onClick={handleFlagClick} className="absolute inset-0 -ml-16">
+      <button onClick={handleFlagClick} className="absolute inset-0 -ml-8 w-8 h-8 bg-white border border-gray-300 bg-opacity-90 rounded-full shadow">
         <Flag />
       </button>
     </div>
