@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import MdiMine from '@/components/icons/Mine';
 import ActionSelector from './ActionSelector';
 import { useGameStore } from '@/store/gameStore';
 import { GameStatus } from '@/types/GameStatus';
 import Flag from './icons/Flag';
+import { countFlagsAround, openAdjacentCells } from '@/utils/logic';
 
 type Props = {
   value: number;
@@ -17,10 +18,12 @@ type Props = {
 
 export default function Cell({ value, isMine, isOpen, isFlagged, isSpecial, rowIndex, colIndex }: Props) {
   const [showActionSelector, setShowActionSelector] = useState(false);
-  const { openCell, toggleFlag, gameStatus } = useGameStore(state => ({
+  const { state, openCell, toggleFlag, gameStatus, setGrid } = useGameStore(state => ({
+    state: state,
     openCell: state.openCell,
     toggleFlag: state.toggleFlag,
-    gameStatus: state.gameStatus
+    gameStatus: state.gameStatus,
+    setGrid: state.setGrid,
   }));
   const { activeCell, setActiveCell } = useGameStore(state => ({
     activeCell: state.activeCell,
@@ -29,17 +32,23 @@ export default function Cell({ value, isMine, isOpen, isFlagged, isSpecial, rowI
   const isActive = activeCell.row === rowIndex && activeCell.col === colIndex;
 
   const handleClick = () => {
-    if (isOpen || gameStatus === GameStatus.Won || gameStatus === GameStatus.Lost) {
+    if (gameStatus === GameStatus.Won || gameStatus === GameStatus.Lost) {
       return;
     }
-    if (isActive) {
-      // 既にアクティブなセルがクリックされた場合、ポップアップを閉じる
-      setShowActionSelector(false);
-      setActiveCell(null, null); // アクティブなセルをリセット
+
+    if (isOpen && value > 0) {
+      // セルが開かれており、数字が表示されている場合
+      handleOpenAdjacent();
     } else {
-      // 新しいセルがクリックされた場合、ポップアップを表示
-      setActiveCell(rowIndex, colIndex);
-      setShowActionSelector(true);
+      if (isOpen || isActive) {
+        // 既にアクティブなセルがクリックされた場合、ポップアップを閉じる
+        setShowActionSelector(false);
+        setActiveCell(null, null); // アクティブなセルをリセット
+      } else {
+        // 新しいセルがクリックされた場合、ポップアップを表示
+        setActiveCell(rowIndex, colIndex);
+        setShowActionSelector(true);
+      }
     }
   };
 
@@ -54,6 +63,15 @@ export default function Cell({ value, isMine, isOpen, isFlagged, isSpecial, rowI
   const handleFlag = () => {
     toggleFlag(rowIndex, colIndex);
     setShowActionSelector(false);
+  };
+
+  const handleOpenAdjacent = () => {
+    const flagsCount = countFlagsAround(state.grid, rowIndex, colIndex);
+    if (flagsCount >= value) {
+      // 隣接セルを開くロジック
+      const newState = openAdjacentCells(state, rowIndex, colIndex);
+      useGameStore.setState(newState);
+    }
   };
 
   const openClass = isOpen ? 'bg-white' : 'bg-gray-200 cursor-pointer';

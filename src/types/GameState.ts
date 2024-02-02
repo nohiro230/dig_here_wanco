@@ -7,7 +7,7 @@ export type GameState = {
   minesCount: number;
   flagsCount: number;
   gridSize: number;
-  activeCell: {row?: number; col?: number;};
+  activeCell: {row?: number | null; col?: number | null;};
   setActiveCell: (row: number | null, col: number | null) => void;
   setGrid: (newGrid: CellType[][]) => void;
   setDifficulty: (gridSize: number, mineCount: number) => void;

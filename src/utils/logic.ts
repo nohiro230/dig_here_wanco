@@ -1,4 +1,6 @@
+import { openCellAction } from '@/actions/gameActions';
 import { CellType } from '@/types/CellType';
+import { GameState } from '@/types/GameState';
 
 export const generateGrid = (size: number, mineCount: number): CellType[][] => {
   // 空のグリッドを生成
@@ -64,8 +66,53 @@ const countAdjacentMines = (grid: CellType[][], row: number, col: number, size: 
   return count;
 };
 
+export const countFlagsAround = (grid: CellType[][], row: number, col: number): number => {
+  let count = 0;
+  for (let i = -1; i <= 1; i++) {
+    for (let j = -1; j <= 1; j++) {
+      const newRow = row + i;
+      const newCol = col + j;
+      if (newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length) {
+        if (grid[newRow][newCol].isFlagged) {
+          count++;
+        }
+      }
+    }
+  }
+  return count;
+};
+
+export const openAdjacentCells = (state: GameState, row: number, col: number): GameState => {
+  const cellValue = state.grid[row][col].adjacentMines;
+
+  if (cellValue > 0) {
+    const flagsCount = countFlagsAround(state.grid, row, col);
+    if (flagsCount >= cellValue) {
+      // 隣接セルを開く
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          if (i === 0 && j === 0) continue; // クリックされたセル自体は除外
+
+          const newRow = row + i;
+          const newCol = col + j;
+
+          if (newRow >= 0 && newRow < state.grid.length && newCol >= 0 && newCol < state.grid[0].length) {
+            const adjacentCell = state.grid[newRow][newCol];
+            if (!adjacentCell.isFlagged && !adjacentCell.isOpen) {
+              // openCellAction を使用してセルを開く
+              state = openCellAction(state, newRow, newCol);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return state;
+};
+
 // 隣接する空白セルも一緒に開ける処理
-const openAdjacentCells = (grid: CellType[][], row: number, col: number, rows: number, cols: number): CellType[][] => {
+const openAdjacentBlankCells = (grid: CellType[][], row: number, col: number, rows: number, cols: number): CellType[][] => {
   // 新しいグリッドのインスタンスを作成
   let newGrid = grid.map(row => row.map(cell => ({ ...cell })));
 
@@ -80,7 +127,7 @@ const openAdjacentCells = (grid: CellType[][], row: number, col: number, rows: n
     for (let i = -1; i <= 1; i++) {
       for (let j = -1; j <= 1; j++) {
         if (i !== 0 || j !== 0) {
-          newGrid = openAdjacentCells(newGrid, row + i, col + j, rows, cols);
+          newGrid = openAdjacentBlankCells(newGrid, row + i, col + j, rows, cols);
         }
       }
     }
@@ -90,7 +137,7 @@ const openAdjacentCells = (grid: CellType[][], row: number, col: number, rows: n
 };
 
 export const openCell = (grid: CellType[][], row: number, col: number, rows: number, cols: number): CellType[][] => {
-  return openAdjacentCells(grid, row, col, rows, cols);
+  return openAdjacentBlankCells(grid, row, col, rows, cols);
 };
 
 // Flug
