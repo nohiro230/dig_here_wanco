@@ -2,10 +2,10 @@ import { openCellAction } from '@/actions/gameActions';
 import { CellType } from '@/types/CellType';
 import { GameState } from '@/types/GameState';
 
-export const generateGrid = (size: number, mineCount: number): CellType[][] => {
+export const generateGrid = (rows: number, cols: number, mineCount: number): CellType[][] => {
   // 空のグリッドを生成
-  let grid: CellType[][] = Array.from({ length: size }, () =>
-    Array.from({ length: size }, () => ({
+  let grid: CellType[][] = Array.from({ length: rows }, () =>
+    Array.from({ length: cols }, () => ({
       isMine: false,
       adjacentMines: 0,
       isOpen: false,
@@ -17,8 +17,8 @@ export const generateGrid = (size: number, mineCount: number): CellType[][] => {
   // マインをランダムに配置
   let minesPlaced = 0;
   while (minesPlaced < mineCount) {
-    const row = Math.floor(Math.random() * size);
-    const col = Math.floor(Math.random() * size);
+    const row = Math.floor(Math.random() * rows);
+    const col = Math.floor(Math.random() * cols);
 
     if (!grid[row][col].isMine) {
       grid[row][col].isMine = true;
@@ -27,10 +27,10 @@ export const generateGrid = (size: number, mineCount: number): CellType[][] => {
   }
 
   // 隣接するマインの数を計算
-  for (let row = 0; row < size; row++) {
-    for (let col = 0; col < size; col++) {
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
       if (!grid[row][col].isMine) {
-        grid[row][col].adjacentMines = countAdjacentMines(grid, row, col, size);
+        grid[row][col].adjacentMines = countAdjacentMines(grid, row, col, rows, cols);
       }
     }
   }
@@ -38,8 +38,8 @@ export const generateGrid = (size: number, mineCount: number): CellType[][] => {
   // ランダムな空白セルに特別なクラスを付与
   let specialCellPlaced = false;
   while (!specialCellPlaced) {
-    const row = Math.floor(Math.random() * size);
-    const col = Math.floor(Math.random() * size);
+    const row = Math.floor(Math.random() * rows);
+    const col = Math.floor(Math.random() * cols);
 
     if (!grid[row][col].isMine && grid[row][col].adjacentMines === 0) {
       grid[row][col].isSpecial = true;
@@ -47,18 +47,17 @@ export const generateGrid = (size: number, mineCount: number): CellType[][] => {
     }
   }
 
-
   return grid;
 };
 
 // 隣接するマインの計算
-const countAdjacentMines = (grid: CellType[][], row: number, col: number, size: number): number => {
+const countAdjacentMines = (grid: CellType[][], row: number, col: number, rows: number, cols: number): number => {
   let count = 0;
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
       const newRow = row + i;
       const newCol = col + j;
-      if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size && grid[newRow][newCol].isMine) {
+      if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && grid[newRow][newCol].isMine) {
         count++;
       }
     }

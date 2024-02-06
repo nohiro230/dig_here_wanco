@@ -74,13 +74,14 @@ export default function Cell({ value, isMine, isOpen, isFlagged, isSpecial, rowI
     }
   };
 
+  const cellClass = isOpen && isMine ? 'mine-blink' : '';
   const openClass = isOpen ? 'bg-white' : 'bg-gray-200 cursor-pointer';
   const specialClass = isSpecial && !isOpen ? 'special-class bg-gray-400' : '';
   const activeClass = isActive && !isOpen ? 'bg-yellow-200' : '';
 
   return (
     <div
-      className={`w-8 h-8 border border-gray-400 rounded flex justify-center items-center ${specialClass} ${openClass} ${activeClass}`}
+      className={`w-[6vw] max-w-8 aspect-square border border-white rounded-sm md:rounded flex justify-center items-center text-[90%] overflow-hidden shadow ${specialClass} ${openClass} ${cellClass} ${activeClass}`}
       onClick={handleClick}
     >
       {isFlagged ? <Flag /> : isOpen ? (isMine ? <MdiMine /> : value > 0 ? value : '') : ''}

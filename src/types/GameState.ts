@@ -6,11 +6,12 @@ export type GameState = {
   grid: CellType[][];
   minesCount: number;
   flagsCount: number;
-  gridSize: number;
+  rows: number;
+  cols: number;
   activeCell: {row?: number | null; col?: number | null;};
   setActiveCell: (row: number | null, col: number | null) => void;
   setGrid: (newGrid: CellType[][]) => void;
-  setDifficulty: (gridSize: number, mineCount: number) => void;
+  setDifficulty: (rows: number, cols: number, mineCount: number) => void;
   openCell: (rowIndex: number, cellIndex: number) => void;
   toggleFlag: (rowIndex: number, cellIndex: number) => void;
   initializeGame: () => void;

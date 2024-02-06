@@ -8,7 +8,7 @@ export default function Board() {
 
   return (
     <>
-      <div className={`boardGrid grid gap-1 w-fit max-w-full mx-auto`}>
+      <div className={`boardGrid grid md:gap-1 w-fit max-w-full mx-auto`}>
         {grid.map((row, rowIndex) =>
           row.map((cell, cellIndex) => (
             <Cell

@@ -4,7 +4,7 @@ import { GameStatus } from '@/types/GameStatus';
 import { CellType } from '@/types/CellType';
 
 export const initializeGame = (state: GameState) => {
-  const newGrid = generateGrid(state.gridSize, state.minesCount);
+  const newGrid = generateGrid(state.rows, state.cols, state.minesCount);
 
   return {
     gameStatus: GameStatus.Waiting,
