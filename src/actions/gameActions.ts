@@ -8,6 +8,7 @@ export const initializeGame = (state: GameState) => {
 
   return {
     gameStatus: GameStatus.Waiting,
+    elapsedTime: 0,
     grid: newGrid,
     flagsCount: 0,
     activeCell: { row: null, col: null },

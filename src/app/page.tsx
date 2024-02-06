@@ -9,18 +9,23 @@ import StatusBar from '@/components/StatusBar';
 import RestartButton from '@/components/RestartButton';
 import DifficultySelector from '@/components/DifficultySelector';
 import Result from '@/components/Result';
+import { useGameTimer } from '@/utils/useGameTimer';
 
 export default function Home() {
 
-  const { gameStatus, initializeGame, setDifficulty } = useGameStore((state) => ({
+  const { gameStatus, initializeGame, setDifficulty, elapsedTime } = useGameStore((state) => ({
     gameStatus: state.gameStatus,
     initializeGame: state.initializeGame,
-    setDifficulty: state.setDifficulty
+    setDifficulty: state.setDifficulty,
+    elapsedTime: state.elapsedTime,
   }));
+
+  useGameTimer(gameStatus);
 
   useEffect(() => {
     initializeGame();
   }, [initializeGame]);
+
 
   const handleSelectDifficulty = (rows: number, cols: number, mineCount: number) => {
     setDifficulty(rows, cols, mineCount);

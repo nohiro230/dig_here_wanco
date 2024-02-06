@@ -8,6 +8,7 @@ export const useGameStore = create<GameState>((set) => ({
   grid: [],
   minesCount: 10,
   flagsCount: 0,
+  elapsedTime: 0,
   rows: 8,
   cols: 8,
   currentAction: 'open',

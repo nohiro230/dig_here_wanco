@@ -9,18 +9,24 @@ type Props = {
 export default function StatusBar({ status }: Props) {
   const minesCount = useGameStore((state) => state.minesCount);
   const flagsCount = useGameStore((state) => state.flagsCount);
-
   const minesLeft = minesCount - flagsCount;
+
+  const elapsedTime = useGameStore((state) => state.elapsedTime);
 
   return (
     <div className="flex justify-center bg-gray-200 p-4">
       <div className="container flex justify-between items-center">
-        <div>Dig here Wanco!!</div>
+        <div>inu</div>
         <div>
           {status}
         </div>
-        <div className="flex justify-between w-10 text-right">
-          <span><Flag /></span>{minesLeft}
+        <div className="flex justify-between gap-x-4 text-right">
+          <div className="flex items-center gap-x-1">
+            <span>time:</span>{elapsedTime}
+          </div>
+          <div className="flex items-center gap-x-1 w-10">
+            <span><Flag /></span>{minesLeft}
+          </div>
         </div>
       </div>
     </div>

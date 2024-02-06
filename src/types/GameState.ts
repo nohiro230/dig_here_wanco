@@ -6,6 +6,7 @@ export type GameState = {
   grid: CellType[][];
   minesCount: number;
   flagsCount: number;
+  elapsedTime: number;
   rows: number;
   cols: number;
   activeCell: {row?: number | null; col?: number | null;};
