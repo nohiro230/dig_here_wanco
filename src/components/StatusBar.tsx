@@ -14,10 +14,10 @@ export default function StatusBar({ status }: Props) {
   const elapsedTime = useGameStore((state) => state.elapsedTime);
 
   return (
-    <div className="flex justify-center bg-gray-200 p-4">
-      <div className="container flex justify-between items-center">
+    <div className="relative flex justify-between bg-gray-200 p-4">
+      <div className="container max-w-screen-sm flex justify-between items-center">
         <div>inu</div>
-        <div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           {status}
         </div>
         <div className="flex justify-between gap-x-4 text-right">

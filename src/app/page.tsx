@@ -35,14 +35,16 @@ export default function Home() {
   return (
     <main className="grid gap-4">
         <StatusBar status={gameStatus} />
-        <Board />
-        <RestartButton />
-        {(gameStatus === GameStatus.Won || gameStatus === GameStatus.Lost) && (
-          <Result status={gameStatus} />
-        )}
-        {gameStatus !== GameStatus.Playing && (
-          <DifficultySelector onSelectDifficulty={handleSelectDifficulty} />
-        )}
+        <div className="flex flex-col gap-y-4 max-w-screen-sm bg-base-100 mx-auto">
+          <Board />
+          <RestartButton />
+          {(gameStatus === GameStatus.Won || gameStatus === GameStatus.Lost) && (
+            <Result status={gameStatus} />
+          )}
+          {gameStatus !== GameStatus.Playing && (
+            <DifficultySelector onSelectDifficulty={handleSelectDifficulty} />
+          )}
+        </div>
     </main>
   );
 }

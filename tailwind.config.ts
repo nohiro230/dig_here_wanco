@@ -19,6 +19,13 @@ const config: Config = {
         default: {
           DEFAULT: '#555555',
         },
+        base: {
+          100: "#ffffff",
+          200: "#eeeeee",
+          300: "#e5e6e6",
+          400: "#999999",
+          content: "#1f2937",
+        },
         primary: {
           DEFAULT: '#6B493B',
         },
